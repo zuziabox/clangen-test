@@ -181,6 +181,9 @@ class ProfileScreen(Screens):
         self.checkboxes = {}
         self.profile_elements = {}
 
+
+
+
     def handle_event(self, event):
         if event.type == pygame_gui.UI_BUTTON_START_PRESS:
             if event.ui_element == self.back_button:
@@ -286,6 +289,13 @@ class ProfileScreen(Screens):
                 self.change_screen("role screen")
             elif event.ui_element == self.change_mentor_button:
                 self.change_screen("choose mentor screen")
+        
+        
+        # Unlost Tab
+        if event.ui_element == self.placeholder_tab_3:
+            self.the_cat.outside = False
+            self.output = self.the_cat.status
+        
         # Personal Tab
         elif self.open_tab == "personal":
             if event.ui_element == self.change_name_button:
@@ -516,7 +526,7 @@ class ProfileScreen(Screens):
 
         self.placeholder_tab_3 = UISurfaceImageButton(
             ui_scale(pygame.Rect((400, 622), (176, 30))),
-            "",
+            "unlost",
             get_button_dict(ButtonStyles.PROFILE_MIDDLE, (176, 30)),
             object_id="@buttonstyles_profile_middle",
             starting_height=1,
@@ -728,6 +738,9 @@ class ProfileScreen(Screens):
         if self.open_tab == "history" and self.open_sub_tab == "user notes":
             self.load_user_notes()
 
+        if hasattr(self.the_cat, 'lost') and self.the_cat.lost == True:
+            self.placeholder_tab_3.enable()
+
         if self.the_cat.status == "leader" and not self.the_cat.dead:
             self.profile_elements["leader_ceremony"] = UIImageButton(
                 ui_scale(pygame.Rect((383, 110), (34, 34))),
@@ -882,6 +895,7 @@ class ProfileScreen(Screens):
             and the_cat.status not in ["kittypet", "loner", "rogue", "former Clancat"]
         ):
             output += "<font color='#FF0000'>lost</font>"
+            the_cat.lost = True
         elif the_cat.exiled:
             output += "<font color='#FF0000'>exiled</font>"
         else:
